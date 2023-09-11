@@ -1,8 +1,25 @@
 import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
-async function bootstrap() {
+async function start() {
+  const PORT = process.env.API_SERVER_PORT || 5000;
   const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
+
+  //Swagger
+  const config = new DocumentBuilder()
+    .setTitle('aka-api')
+    .setDescription('AKATech products API Documentation')
+    .setVersion('1.0.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('/api/docs', app, document);
+
+  //Start
+  await app.listen(PORT, () => {
+    console.log(`Server started at port ${PORT}`);
+  });
 }
-bootstrap();
+start();
+
+// .env doesnt work
