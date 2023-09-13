@@ -1,18 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Brand } from './brands.model';
+import { CreateBrandDto } from './dto/create-brand-dto';
+import { UpdateBrandDto } from './dto/update-brand-dto';
 
 @Injectable()
 export class BrandsService {
   constructor(@InjectModel(Brand) private brandModel: typeof Brand) {}
 
-  async createBrand() {}
+  async createBrand(dto: CreateBrandDto) {
+    return dto;
+  }
 
-  async getAllBrands() {}
+  async getAllBrands() {
+    return [];
+  }
 
-  async getBrandById() {}
+  async getBrandById(id: number) {
+    return id;
+  }
 
-  async updateBrand() {}
+  async updateBrand(id: number, dto: UpdateBrandDto) {
+    return { id, dto };
+  }
 
-  async deleteBrand() {}
+  async deleteBrand(id: number) {
+    return id;
+  }
 }

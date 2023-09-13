@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, MaxLength } from 'class-validator';
 
-export class UpdateUserDto {
+export class UpdateBrandDto {
   @ApiProperty({
     example: 'Speedy block',
     description: 'Brand unique name',
