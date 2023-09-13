@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsOptional, IsString, Matches, MaxLength } from 'class-validator';
 
 export class UpdateBrandDto {
   @ApiProperty({
@@ -19,6 +19,9 @@ export class UpdateBrandDto {
   })
   @IsString()
   @MaxLength(30)
+  @Matches(/^[a-z_]+$/, {
+    message: `descriptor is a string in lower case with only low dash '_' accepted symbol`,
+  })
   @IsOptional()
   readonly descriptor: string;
 }
