@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, Matches, MaxLength } from 'class-validator';
+import { brandDescriptorPattern } from 'src/utils/validation/fieldPatterns';
 
 export class CreateBrandDto {
   @ApiProperty({
@@ -18,7 +19,7 @@ export class CreateBrandDto {
   })
   @IsString()
   @MaxLength(30)
-  @Matches(/^[a-z_]+$/, {
+  @Matches(brandDescriptorPattern, {
     message: `descriptor is a string in lower case with only low dash '_' accepted symbol`,
   })
   readonly descriptor: string;

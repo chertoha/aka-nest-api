@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Op } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import { CommonException } from 'src/exceptions/common.exception';
 import { Brand } from './brands.model';
@@ -67,29 +67,57 @@ export class BrandsService {
           throw new NotFoundException('Brand not found');
         }
 
-        // const existingUser = await this.checkIsUserExistedByUsernameAndEmail(
-        //   id,
-        //   dto,
-        //   t,
-        // );
+        const existingBrand =
+          await this.checkIsBrandExistedByBrandnameAndDescriptor(id, dto, t);
 
-        // if (existingUser) {
-        //   throw new ConflictException('Username or email already exists');
-        // }
+        if (existingBrand) {
+          throw new ConflictException('Brand name already exists');
+        }
 
-        // await user.profile.update({ ...dto }, { transaction: t });
-        // const updatedUser = await user.update({ ...dto }, { transaction: t });
+        const updatedBrand = await brand.update({ ...dto }, { transaction: t });
 
-        // return updatedUser.get();
+        return updatedBrand.get();
       });
+      return result;
     } catch (err) {
       throw new CommonException(err.message, err.status);
     }
-
-    return { id, dto };
   }
 
   async deleteBrand(id: number) {
     return id;
   }
+
+  private async checkIsBrandExistedByBrandnameAndDescriptor(
+    updatingBrandId: number,
+    dto: UpdateBrandDto,
+    transaction?: Transaction,
+  ): Promise<Brand | null> {
+    let existingBrand: Brand | null = null;
+
+    const whereConditions = [];
+    if (dto.name) {
+      whereConditions.push({ name: dto.name });
+    }
+
+    // if (dto.descriptor) {
+    //   whereConditions.push({ descriptor: dto.descriptor });
+    // }
+
+    if (whereConditions.length > 0) {
+      existingBrand = await this.brandModel.findOne({
+        where: {
+          [Op.and]: [
+            { id: { [Op.not]: updatingBrandId } },
+            { [Op.or]: whereConditions },
+          ],
+        },
+        transaction,
+      });
+    }
+
+    return existingBrand;
+  }
 }
+
+// descriptor must not be updated!!!!
