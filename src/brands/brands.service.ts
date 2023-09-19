@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Op, Transaction } from 'sequelize';
+import { Model, Op, Transaction } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import { CommonException } from 'src/exceptions/common.exception';
 import { Brand } from './brands.model';
@@ -67,8 +67,15 @@ export class BrandsService {
           throw new NotFoundException('Brand not found');
         }
 
-        const existingBrand =
-          await this.checkIsBrandExistedByBrandnameAndDescriptor(id, dto, t);
+        const existingBrand = await this.brandModel.findOne({
+          where: {
+            [Op.and]: [
+              { id: { [Op.not]: id } },
+              { [Op.or]: { name: dto.name } },
+            ],
+          },
+          transaction: t,
+        });
 
         if (existingBrand) {
           throw new ConflictException('Brand name already exists');

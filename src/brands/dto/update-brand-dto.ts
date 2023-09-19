@@ -25,6 +25,6 @@ export class UpdateBrandDto {
   //   message: `descriptor is a string in lower case with only low dash '_' accepted symbol`,
   // })
   // @IsOptional()
-  @Exclude()
-  readonly descriptor: string;
+  // @Exclude()
+  // readonly descriptor: string;
 }
