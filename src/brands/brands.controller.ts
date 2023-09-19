@@ -8,10 +8,10 @@ import {
   Patch,
   Post,
   UsePipes,
-  // ValidationPipe,
+  ValidationPipe as BuiltInValidationPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ValidationPipe } from 'src/pipes/validation.pipe';
+// import { ValidationPipe } from 'src/pipes/validation.pipe';
 import { Brand } from './brands.model';
 import { BrandsService } from './brands.service';
 import { CreateBrandDto } from './dto/create-brand-dto';
@@ -46,7 +46,9 @@ export class BrandsController {
   @ApiOperation({ summary: 'Update brand' })
   @ApiResponse({ status: 200, type: Brand })
   @Patch(':id')
-  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+  @UsePipes(
+    new BuiltInValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
+  )
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateBrandDto: UpdateBrandDto,
