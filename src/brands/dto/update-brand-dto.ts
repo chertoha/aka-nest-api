@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
-import { IsOptional, IsString, Matches, MaxLength } from 'class-validator';
-import { brandDescriptorPattern } from 'src/utils/validation/fieldPatterns';
+// import { Exclude } from 'class-transformer';
+import { IsOptional, IsString, MaxLength } from 'class-validator';
+// import { brandDescriptorPattern } from 'src/utils/validation/fieldPatterns';
 
 export class UpdateBrandDto {
   @ApiProperty({

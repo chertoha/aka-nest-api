@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Model, Op, Transaction } from 'sequelize';
+import { Op } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import { CommonException } from 'src/exceptions/common.exception';
 import { Brand } from './brands.model';
@@ -92,39 +92,25 @@ export class BrandsService {
   }
 
   async deleteBrand(id: number) {
-    return id;
-  }
+    try {
+      const result = await this.sequelize.transaction(async (t) => {
+        const brand = await this.brandModel.findByPk(id, {
+          transaction: t,
+        });
 
-  private async checkIsBrandExistedByBrandnameAndDescriptor(
-    updatingBrandId: number,
-    dto: UpdateBrandDto,
-    transaction?: Transaction,
-  ): Promise<Brand | null> {
-    let existingBrand: Brand | null = null;
+        if (!brand) {
+          throw new NotFoundException('Brand not found');
+        }
 
-    const whereConditions = [];
-    if (dto.name) {
-      whereConditions.push({ name: dto.name });
-    }
+        const deletedBrand = brand.get();
 
-    // if (dto.descriptor) {
-    //   whereConditions.push({ descriptor: dto.descriptor });
-    // }
+        await brand.destroy({ transaction: t });
 
-    if (whereConditions.length > 0) {
-      existingBrand = await this.brandModel.findOne({
-        where: {
-          [Op.and]: [
-            { id: { [Op.not]: updatingBrandId } },
-            { [Op.or]: whereConditions },
-          ],
-        },
-        transaction,
+        return deletedBrand;
       });
+      return result;
+    } catch (err) {
+      throw new CommonException(err.message, err.status);
     }
-
-    return existingBrand;
   }
 }
-
-// descriptor must not be updated!!!!
