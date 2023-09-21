@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { BrandsModule } from './brands/brands.module';
+import { LangModule } from './lang/lang.module';
 
 @Module({
   controllers: [],
@@ -24,6 +25,8 @@ import { BrandsModule } from './brands/brands.module';
     }),
 
     BrandsModule,
+
+    LangModule,
   ],
 })
 export class AppModule {}
