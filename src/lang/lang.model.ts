@@ -16,7 +16,7 @@ export class Langs extends Model<Langs, ILangCreationAttrs> {
   })
   id: number;
 
-  @ApiProperty({ example: 'ua', description: 'Lang name' })
+  @ApiProperty({ example: 'ukrainian', description: 'Lang name' })
   @Column({
     type: DataType.STRING,
     // unique: true,
