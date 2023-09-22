@@ -3,10 +3,11 @@ import { Model, Column, Table, DataType } from 'sequelize-typescript';
 
 interface ILangCreationAttrs {
   name: string;
+  code: string;
 }
 
 @Table({ tableName: 'langs' })
-export class Langs extends Model<Langs, ILangCreationAttrs> {
+export class Lang extends Model<Lang, ILangCreationAttrs> {
   @ApiProperty({ example: '1', description: 'Unique key value' })
   @Column({
     type: DataType.INTEGER,
@@ -36,7 +37,7 @@ export class Langs extends Model<Langs, ILangCreationAttrs> {
   @Column({
     type: DataType.STRING,
     // unique: true,
-    // allowNull: false,
+    allowNull: true,
   })
   native_name: string;
 }

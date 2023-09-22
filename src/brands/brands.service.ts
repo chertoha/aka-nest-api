@@ -30,7 +30,7 @@ export class BrandsService {
     });
 
     if (!created) {
-      throw new ConflictException('Brand is already exist');
+      throw new ConflictException('Brand is already existed');
     }
 
     return brand;

@@ -25,7 +25,6 @@ import { LangModule } from './lang/lang.module';
     }),
 
     BrandsModule,
-
     LangModule,
   ],
 })
