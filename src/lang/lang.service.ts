@@ -41,14 +41,19 @@ export class LangService {
   }
 
   async getLangById(id: number) {
-    const lang = await this.langModel.findByPk(id, {
-      attributes: { exclude: ['createdAt', 'updatedAt'] },
-    });
+    // const lang = await this.langModel.findByPk(id, {
+    //   attributes: { exclude: ['createdAt', 'updatedAt'] },
+    // });
 
-    if (!lang) {
-      throw new NotFoundException('Language not found');
-    }
+    // if (!lang) {
+    //   throw new NotFoundException('Language not found');
+    // }
 
-    return lang;
+    // return lang;
+
+    return await CommonDBRequest.getOne(Lang, id, {
+      notFoundEntityName: 'Brand',
+      });
   }
+ 
 }

@@ -47,15 +47,19 @@ export class BrandsService {
   }
 
   async getBrandById(id: number) {
-    const brand = await this.brandModel.findByPk(id, {
-      attributes: { exclude: ['createdAt', 'updatedAt'] },
+    // const brand = await this.brandModel.findByPk(id, {
+    //   attributes: { exclude: ['createdAt', 'updatedAt'] },
+    // });
+
+    // if (!brand) {
+    //   throw new NotFoundException('Brand not found');
+    // }
+
+    // return brand;
+
+    return await CommonDBRequest.getOne(Brand, id, {
+      notFoundEntityName: 'Brand',
     });
-
-    if (!brand) {
-      throw new NotFoundException('Brand not found');
-    }
-
-    return brand;
   }
 
   async updateBrand(id: number, dto: UpdateBrandDto) {
