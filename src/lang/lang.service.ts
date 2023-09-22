@@ -1,8 +1,4 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 import { CommonDBRequest } from 'src/utils/validation/helpers/CommonDBRequest';
@@ -40,20 +36,19 @@ export class LangService {
     return await CommonDBRequest.getAll(Lang);
   }
 
-  async getLangById(id: number) {
-    // const lang = await this.langModel.findByPk(id, {
-    //   attributes: { exclude: ['createdAt', 'updatedAt'] },
-    // });
+  // async getLangById(id: number) {
+  //   // const lang = await this.langModel.findByPk(id, {
+  //   //   attributes: { exclude: ['createdAt', 'updatedAt'] },
+  //   // });
 
-    // if (!lang) {
-    //   throw new NotFoundException('Language not found');
-    // }
+  //   // if (!lang) {
+  //   //   throw new NotFoundException('Language not found');
+  //   // }
 
-    // return lang;
+  //   // return lang;
 
-    return await CommonDBRequest.getOne(Lang, id, {
-      notFoundEntityName: 'Brand',
-      });
-  }
- 
+  // //   return await CommonDBRequest.getOne(Lang, id, {
+  // //     notFoundEntityName: 'Brand',
+  // // });
+  //}
 }
