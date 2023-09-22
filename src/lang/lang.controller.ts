@@ -33,12 +33,12 @@ export class LangController {
     return this.langService.getAllLangs();
   }
 
-  // @ApiOperation({ summary: 'Get language by id' })
-  // @ApiResponse({ status: 200, type: Lang })
-  // @Get(':id')
-  // getOne(@Param('id', ParseIntPipe) id: number) {
-  //   // return this.langService.getLangById(id);
-  // }
+  @ApiOperation({ summary: 'Get language by id' })
+  @ApiResponse({ status: 200, type: Lang })
+  @Get(':id')
+  getOne(@Param('id', ParseIntPipe) id: number) {
+    return this.langService.getLangById(id);
+  }
 
   // @ApiOperation({ summary: 'Update language' })
   // @ApiResponse({ status: 200, type: Lang })

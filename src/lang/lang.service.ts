@@ -1,6 +1,11 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
+import { CommonDBRequest } from 'src/utils/validation/helpers/CommonDBRequest';
 import { CreateLangDto } from './dto/create-lang-dto';
 import { Lang } from './lang.model';
 
@@ -26,10 +31,24 @@ export class LangService {
   }
 
   async getAllLangs() {
-    const langs = await this.langModel.findAll({
-      order: ['id'],
+    // const langs = await this.langModel.findAll({
+    //   order: ['id'],
+    //   attributes: { exclude: ['createdAt', 'updatedAt'] },
+    // });
+    // return langs;
+
+    return await CommonDBRequest.getAll(Lang);
+  }
+
+  async getLangById(id: number) {
+    const lang = await this.langModel.findByPk(id, {
       attributes: { exclude: ['createdAt', 'updatedAt'] },
     });
-    return langs;
+
+    if (!lang) {
+      throw new NotFoundException('Language not found');
+    }
+
+    return lang;
   }
 }

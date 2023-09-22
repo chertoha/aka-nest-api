@@ -7,6 +7,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import { CommonException } from 'src/exceptions/common.exception';
+import { CommonDBRequest } from 'src/utils/validation/helpers/CommonDBRequest';
 import { Brand } from './brands.model';
 import { CreateBrandDto } from './dto/create-brand-dto';
 import { UpdateBrandDto } from './dto/update-brand-dto';
@@ -26,7 +27,6 @@ export class BrandsService {
       defaults: {
         ...dto,
       },
-      //   attributes: { exclude: ['createdAt', 'updatedAt'] },
     });
 
     if (!created) {
@@ -37,11 +37,13 @@ export class BrandsService {
   }
 
   async getAllBrands() {
-    const brands = await this.brandModel.findAll({
-      order: ['id'],
-      attributes: { exclude: ['createdAt', 'updatedAt'] },
-    });
-    return brands;
+    // const brands = await this.brandModel.findAll({
+    //   order: ['id'],
+    //   attributes: { exclude: ['createdAt', 'updatedAt'] },
+    // });
+    // return brands;
+
+    return await CommonDBRequest.getAll(Brand);
   }
 
   async getBrandById(id: number) {
