@@ -36,19 +36,16 @@ export class LangService {
     return await CommonDBRequest.getAll(Lang);
   }
 
-  // async getLangById(id: number) {
-  //   // const lang = await this.langModel.findByPk(id, {
-  //   //   attributes: { exclude: ['createdAt', 'updatedAt'] },
-  //   // });
-
-  //   // if (!lang) {
-  //   //   throw new NotFoundException('Language not found');
-  //   // }
-
-  //   // return lang;
-
-  // //   return await CommonDBRequest.getOne(Lang, id, {
-  // //     notFoundEntityName: 'Brand',
-  // // });
-  //}
+  async getLangById(id: number) {
+    // const lang = await this.langModel.findByPk(id, {
+    //   attributes: { exclude: ['createdAt', 'updatedAt'] },
+    // });
+    // if (!lang) {
+    //   throw new NotFoundException('Language not found');
+    // }
+    // return lang;d
+    return await CommonDBRequest.getOne(Lang, id, {
+      notFoundEntityName: 'Lang',
+    });
+  }
 }
