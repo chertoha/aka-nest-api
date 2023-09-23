@@ -98,25 +98,28 @@ export class BrandsService {
   }
 
   async deleteBrand(id: number) {
-    try {
-      const result = await this.sequelize.transaction(async (t) => {
-        const brand = await this.brandModel.findByPk(id, {
-          transaction: t,
-        });
+    return await CommonDBRequest.delete({
+      model: Brand,
+      sequelizeInstance: this.sequelize,
+      id,
+      options: { notFoundEntityName: 'Brand' },
+    });
 
-        if (!brand) {
-          throw new NotFoundException('Brand not found');
-        }
-
-        const deletedBrand = brand.get();
-
-        await brand.destroy({ transaction: t });
-
-        return deletedBrand;
-      });
-      return result;
-    } catch (err) {
-      throw new CommonException(err.message, err.status);
-    }
+    // try {
+    //   const result = await this.sequelize.transaction(async (t) => {
+    //     const brand = await this.brandModel.findByPk(id, {
+    //       transaction: t,
+    //     });
+    //     if (!brand) {
+    //       throw new NotFoundException('Brand not found');
+    //     }
+    //     const deletedBrand = brand.get();
+    //     await brand.destroy({ transaction: t });
+    //     return deletedBrand;
+    //   });
+    //   return result;
+    // } catch (err) {
+    //   throw new CommonException(err.message, err.status);
+    // }
   }
 }

@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateLangDto } from './dto/create-lang-dto';
+import { UpdateLangDto } from './dto/update-lang-dto';
 import { Lang } from './lang.model';
 import { LangService } from './lang.service';
 
@@ -40,23 +41,23 @@ export class LangController {
     return this.langService.getLangById(id);
   }
 
-  // @ApiOperation({ summary: 'Update language' })
-  // @ApiResponse({ status: 200, type: Lang })
-  // @Patch(':id')
-  // //   @UsePipes(
-  // //     new BuiltInValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
-  // //   )
-  // update(
-  //   @Param('id', ParseIntPipe) id: number,
-  //   // @Body() updateBrandDto: UpdateBrandDto,
-  // ) {
-  //   // return this.brandService.updateBrand(id, updateBrandDto);
-  // }
+  @ApiOperation({ summary: 'Update language' })
+  @ApiResponse({ status: 200, type: Lang })
+  @Patch(':id')
+  //   @UsePipes(
+  //     new BuiltInValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
+  //   )
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateLangDto: UpdateLangDto,
+  ) {
+    return this.langService.updateLang(id, updateLangDto);
+  }
 
-  // @ApiOperation({ summary: 'Delete language' })
-  // @ApiResponse({ status: 200, type: Lang })
-  // @Delete(':id')
-  // delete(@Param('id', ParseIntPipe) id: number) {
-  //   // return this.brandService.deleteBrand(id);
-  // }
+  @ApiOperation({ summary: 'Delete language' })
+  @ApiResponse({ status: 200, type: Lang })
+  @Delete(':id')
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.langService.deleteLang(id);
+  }
 }
