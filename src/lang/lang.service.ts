@@ -65,7 +65,7 @@ export class LangService {
       whereConditions.push({ code: dto.code });
     }
 
-    return await CommonDBRequest.update({
+    return await CommonDBRequest.update<UpdateLangDto>({
       model: Lang,
       sequelizeInstance: this.sequelize,
       id,

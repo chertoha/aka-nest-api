@@ -3,6 +3,13 @@ import { Op } from 'sequelize';
 import { ModelCtor, Sequelize } from 'sequelize-typescript';
 import { CommonException } from 'src/exceptions/common.exception';
 
+type FindOrCreate<T> = {
+  model: ModelCtor<any>;
+  dto: T;
+  options?: { entityName: string };
+  whereConditions?: any[];
+};
+
 type GetOneOptions = {
   notFoundEntityName: string;
 };
@@ -24,6 +31,26 @@ type UpdateOptions<T> = {
 };
 
 export class CommonDBRequest {
+  static async findOrCreate<T>({
+    model,
+    dto,
+    whereConditions = [],
+    options,
+  }: FindOrCreate<T>) {
+    // const [data, created] = await model.findOrCreate({
+    //   where: {
+    //     [Op.or]: whereConditions,
+    //   },
+    //   defaults: {
+    //     ...dto,
+    //   },
+    // });
+    // if (!created) {
+    //   throw new ConflictException(`${options?.entityName} is already existed`);
+    // }
+    // return data;
+  }
+
   static async getAll(model: ModelCtor<any>) {
     const data = await model.findAll({
       order: ['id'],
@@ -117,7 +144,7 @@ export class CommonDBRequest {
     }
   }
 
-  private static throwNotFoundException(entityName: string, id: number) {
+  private static throwNotFoundException(entityName: string, id?: number) {
     throw new NotFoundException(`${entityName || 'Data'} id=${id} not found'`);
   }
 }

@@ -68,7 +68,7 @@ export class BrandsService {
       whereConditions.push({ name: dto.name });
     }
 
-    return await CommonDBRequest.update({
+    return await CommonDBRequest.update<UpdateBrandDto>({
       model: Brand,
       sequelizeInstance: this.sequelize,
       id,
