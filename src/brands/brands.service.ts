@@ -63,38 +63,52 @@ export class BrandsService {
   }
 
   async updateBrand(id: number, dto: UpdateBrandDto) {
-    try {
-      const result = await this.sequelize.transaction(async (t) => {
-        const brand = await this.brandModel.findByPk(id, {
-          transaction: t,
-        });
-
-        if (!brand) {
-          throw new NotFoundException('Brand not found');
-        }
-
-        const existingBrand = await this.brandModel.findOne({
-          where: {
-            [Op.and]: [
-              { id: { [Op.not]: id } },
-              { [Op.or]: { name: dto.name } },
-            ],
-          },
-          transaction: t,
-        });
-
-        if (existingBrand) {
-          throw new ConflictException('Brand name already exists');
-        }
-
-        const updatedBrand = await brand.update({ ...dto }, { transaction: t });
-
-        return updatedBrand.get();
-      });
-      return result;
-    } catch (err) {
-      throw new CommonException(err.message, err.status);
+    const whereConditions = [];
+    if (dto.name) {
+      whereConditions.push({ name: dto.name });
     }
+
+    return await CommonDBRequest.update({
+      model: Brand,
+      sequelizeInstance: this.sequelize,
+      id,
+      whereConditions,
+      dto,
+      options: { entityName: 'Brand' },
+    });
+
+    // try {
+    //   const result = await this.sequelize.transaction(async (t) => {
+    //     const brand = await this.brandModel.findByPk(id, {
+    //       transaction: t,
+    //     });
+
+    //     if (!brand) {
+    //       throw new NotFoundException('Brand not found');
+    //     }
+
+    //     const existingBrand = await this.brandModel.findOne({
+    //       where: {
+    //         [Op.and]: [
+    //           { id: { [Op.not]: id } },
+    //           { [Op.or]: { name: dto.name } },
+    //         ],
+    //       },
+    //       transaction: t,
+    //     });
+
+    //     if (existingBrand) {
+    //       throw new ConflictException('Brand name already exists');
+    //     }
+
+    //     const updatedBrand = await brand.update({ ...dto }, { transaction: t });
+
+    //     return updatedBrand.get();
+    //   });
+    //   return result;
+    // } catch (err) {
+    //   throw new CommonException(err.message, err.status);
+    // }
   }
 
   async deleteBrand(id: number) {
