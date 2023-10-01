@@ -20,20 +20,27 @@ export class LangService {
   ) {}
 
   async createLang(dto: CreateLangDto) {
-    const [lang, created] = await this.langModel.findOrCreate({
-      where: {
-        [Op.or]: [{ code: dto.code }],
-      },
-      defaults: {
-        ...dto,
-      },
+    // const [lang, created] = await this.langModel.findOrCreate({
+    //   where: {
+    //     [Op.or]: [{ code: dto.code }],
+    //   },
+    //   defaults: {
+    //     ...dto,
+    //   },
+    // });
+
+    // if (!created) {
+    //   throw new ConflictException('Language is already existed');
+    // }
+
+    // return lang;
+
+    return await CommonDBRequest.create<CreateLangDto>({
+      dto,
+      model: Lang,
+      sequelizeInstance: this.sequelize,
+      whereConditions: [{ code: dto.code }],
     });
-
-    if (!created) {
-      throw new ConflictException('Language is already existed');
-    }
-
-    return lang;
   }
 
   async getAllLangs() {

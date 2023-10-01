@@ -1,13 +1,14 @@
 import { ConflictException, NotFoundException } from '@nestjs/common';
-import { Op } from 'sequelize';
+import { ModelAttributes, Op } from 'sequelize';
 import { ModelCtor, Sequelize } from 'sequelize-typescript';
 import { CommonException } from 'src/exceptions/common.exception';
 
-type FindOrCreate<T> = {
+type CreateOptions<T> = {
   model: ModelCtor<any>;
   dto: T;
   options?: { entityName: string };
   whereConditions?: any[];
+  sequelizeInstance: Sequelize;
 };
 
 type GetOneOptions = {
@@ -31,24 +32,35 @@ type UpdateOptions<T> = {
 };
 
 export class CommonDBRequest {
-  static async findOrCreate<T>({
+  static async create<T extends ModelAttributes>({
     model,
     dto,
+    sequelizeInstance,
     whereConditions = [],
     options,
-  }: FindOrCreate<T>) {
-    // const [data, created] = await model.findOrCreate({
-    //   where: {
-    //     [Op.or]: whereConditions,
-    //   },
-    //   defaults: {
-    //     ...dto,
-    //   },
-    // });
-    // if (!created) {
-    //   throw new ConflictException(`${options?.entityName} is already existed`);
-    // }
-    // return data;
+  }: CreateOptions<T>) {
+    try {
+      const result = await sequelizeInstance.transaction(async (t) => {
+        const existingData = await model.findOne({
+          where: {
+            [Op.or]: whereConditions,
+          },
+          transaction: t,
+        });
+
+        if (existingData) {
+          throw new ConflictException(
+            `${options?.entityName} is already existed`,
+          );
+        }
+
+        const data = await model.create(dto);
+        return data;
+      });
+      return result;
+    } catch (err) {
+      throw new CommonException(err.message, err.status);
+    }
   }
 
   static async getAll(model: ModelCtor<any>) {
