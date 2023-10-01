@@ -35,11 +35,12 @@ export class LangService {
 
     // return lang;
 
-    return await CommonDBRequest.create<CreateLangDto>({
+    return await CommonDBRequest.create({
       dto,
       model: Lang,
       sequelizeInstance: this.sequelize,
       whereConditions: [{ code: dto.code }],
+      options: { entityName: 'Language' },
     });
   }
 
@@ -62,7 +63,7 @@ export class LangService {
     // }
     // return lang;d
     return await CommonDBRequest.getOne(Lang, id, {
-      notFoundEntityName: 'Lang',
+      notFoundEntityName: 'Language',
     });
   }
 
@@ -78,7 +79,7 @@ export class LangService {
       id,
       whereConditions,
       dto,
-      options: { entityName: 'Lang' },
+      options: { entityName: 'Language' },
     });
 
     // try {

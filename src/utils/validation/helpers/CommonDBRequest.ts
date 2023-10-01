@@ -3,9 +3,9 @@ import { ModelAttributes, Op } from 'sequelize';
 import { ModelCtor, Sequelize } from 'sequelize-typescript';
 import { CommonException } from 'src/exceptions/common.exception';
 
-type CreateOptions<T> = {
+type CreateOptions = {
   model: ModelCtor<any>;
-  dto: T;
+  dto: any;
   options?: { entityName: string };
   whereConditions?: any[];
   sequelizeInstance: Sequelize;
@@ -38,7 +38,7 @@ export class CommonDBRequest {
     sequelizeInstance,
     whereConditions = [],
     options,
-  }: CreateOptions<T>) {
+  }: CreateOptions) {
     try {
       const result = await sequelizeInstance.transaction(async (t) => {
         const existingData = await model.findOne({

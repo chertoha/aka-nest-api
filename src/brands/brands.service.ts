@@ -20,20 +20,26 @@ export class BrandsService {
   ) {}
 
   async createBrand(dto: CreateBrandDto) {
-    const [brand, created] = await this.brandModel.findOrCreate({
-      where: {
-        [Op.or]: [{ name: dto.name }, { descriptor: dto.descriptor }],
-      },
-      defaults: {
-        ...dto,
-      },
+    // const [brand, created] = await this.brandModel.findOrCreate({
+    //   where: {
+    //     [Op.or]: [{ name: dto.name }, { descriptor: dto.descriptor }],
+    //   },
+    //   defaults: {
+    //     ...dto,
+    //   },
+    // });
+    // if (!created) {
+    //   throw new ConflictException('Brand is already existed');
+    // }
+    // return brand;
+
+    return CommonDBRequest.create({
+      model: Brand,
+      dto,
+      sequelizeInstance: this.sequelize,
+      whereConditions: [{ name: dto.name }, { descriptor: dto.descriptor }],
+      options: { entityName: 'Brand' },
     });
-
-    if (!created) {
-      throw new ConflictException('Brand is already existed');
-    }
-
-    return brand;
   }
 
   async getAllBrands() {
